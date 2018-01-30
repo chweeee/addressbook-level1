@@ -575,6 +575,7 @@ public class AddressBook {
      */
     private static String executeListAllPersonsInAddressBook() {
         ArrayList<String[]> toBeDisplayed = getAllPersonsInAddressBook();
+        //displays all users in alphabetical order
         showToUser(toBeDisplayed);
         return getMessageForPersonsDisplayedSummary(toBeDisplayed);
     }
@@ -925,8 +926,15 @@ public class AddressBook {
                 extractPhoneFromPersonString(encoded),
                 extractEmailFromPersonString(encoded)
         );
-        // check that the constructed person is valid
-        return isPersonDataValid(decodedPerson) ? Optional.of(decodedPerson) : Optional.empty();
+
+        if(extractPhoneFromPersonString(encoded).length() != 8){
+            System.out.println("|| Invalid! Number must be 8 digits long!");
+            return Optional.empty();
+        }
+        else {
+            // check that the constructed person is valid
+            return isPersonDataValid(decodedPerson) ? Optional.of(decodedPerson) : Optional.empty();
+        }
     }
 
     /**
@@ -986,6 +994,7 @@ public class AddressBook {
     private static String extractPhoneFromPersonString(String encoded) {
         final int indexOfPhonePrefix = encoded.indexOf(PERSON_DATA_PREFIX_PHONE);
         final int indexOfEmailPrefix = encoded.indexOf(PERSON_DATA_PREFIX_EMAIL);
+        String number;
 
         // phone is last arg, target is from prefix to end of string
         if (indexOfPhonePrefix > indexOfEmailPrefix) {
